@@ -91,5 +91,5 @@
     "translate": "translate-adapter",
     "release": "release-script --all"
   },
-  "version": "0.10.2"
+  "version": "0.10.3-alpha.0"
 }

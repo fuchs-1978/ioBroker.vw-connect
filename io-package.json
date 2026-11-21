@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "vw-connect",
-    "version": "0.10.2",
+    "version": "0.10.3-alpha.0",
     "news": {
+      "0.10.3-alpha.0": {
+        "en": "Test version: expose the original EU Data Act measurement timestamp for each imported value",
+        "de": "Testversion: ursprünglichen EU-Data-Act-Messzeitpunkt zu jedem importierten Wert bereitstellen",
+        "ru": "Тестовая версия: исходная временная метка измерения EU Data Act для каждого импортированного значения",
+        "pt": "Versão de teste: disponibiliza a data e hora original da medição EU Data Act para cada valor importado",
+        "nl": "Testversie: toont het oorspronkelijke EU Data Act-meettijdstip voor elke geïmporteerde waarde",
+        "fr": "Version de test : expose l’horodatage de mesure EU Data Act d’origine pour chaque valeur importée",
+        "it": "Versione di test: espone la data e l’ora originali della misurazione EU Data Act per ogni valore importato",
+        "es": "Versión de prueba: muestra la fecha y hora originales de medición EU Data Act para cada valor importado",
+        "pl": "Wersja testowa: udostępnia oryginalny znacznik czasu pomiaru EU Data Act dla każdej importowanej wartości",
+        "uk": "Тестова версія: початкова часова мітка вимірювання EU Data Act для кожного імпортованого значення",
+        "zh-cn": "测试版本：为每个导入值提供原始 EU Data Act 测量时间戳"
+      },
       "0.10.2": {
         "en": "EU Data Act: follow VW's portal move to eu-data-act.vwgroup-datahub.com; fixes the 'Login did not complete' error after the host change",
         "de": "EU Data Act: VWs Portal-Umzug auf eu-data-act.vwgroup-datahub.com nachvollzogen; behebt den 'Login did not complete'-Fehler nach dem Host-Wechsel",

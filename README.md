@@ -179,6 +179,11 @@ You can set climatisaton temperature in
 
 ```
 ### **WORK IN PROGRESS**
+
+### 0.10.3-alpha.0 (2026-11-21)
+
+- Test version: expose each imported EU Data Act reading's original measurement timestamp under `<vin>.statuseudata._timestamps.*` to check source-data delays.
+
 ### 0.10.2 (2026-11-16)
 - EU Data Act: follow VW's portal move from eu-data-act.drivesomethinggreater.com to eu-data-act.vwgroup-datahub.com (old host now 301-redirects); fixes the "Login did not complete" failure that broke every login after the host change. Both hosts are accepted during the transition
 ### 0.10.1 (2026-11-04)
