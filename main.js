@@ -7744,11 +7744,11 @@ class VwWeconnect extends utils.Adapter {
         descriptions: this.euDataActDescriptions,
         states: this.euDataActStates,
       });
-      // Timestamp strings have their own channel so value descriptions and
+      // Timestamp values have their own channel so value descriptions and
       // enum mappings are only applied to the vehicle readings above.
       await this.json2iob.parse(vin + ".statuseudata._timestamps", timestamps, {
         forceIndex: true,
-        channelName: "Vehicle source timestamps (UTC)",
+        channelName: "Vehicle source timestamps (Unix milliseconds)",
       });
       this.euDataActLastDataset[vin] = newest.name;
       // Reset the once-per-session no-content flag so a future stretch of

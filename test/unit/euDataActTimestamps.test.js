@@ -5,6 +5,7 @@ const Json2iob = require("json2iob");
 const { normalizeDataset } = require("../../lib/euDataAct");
 
 const sourceTime = "2026-11-17T22:46:12.000Z";
+const sourceTimestamp = 1794955572000;
 
 function reading(dataFieldName, value, timestampUtc = sourceTime) {
   return { key: "test-field", dataFieldName, value, timestampUtc };
@@ -18,7 +19,7 @@ describe("EU Data Act source timestamps", () => {
         Data: [reading("state_of_charge", "82")],
       });
       assert.equal(result.state_of_charge, 82);
-      assert.equal(result._timestamps.state_of_charge, sourceTime);
+      assert.equal(result._timestamps.state_of_charge, sourceTimestamp);
     }
   });
 
@@ -28,9 +29,9 @@ describe("EU Data Act source timestamps", () => {
       reading("charging_plug1_connectionstate", "connected", "2026-11-18T02:00:00+01:00"),
     ] });
     assert.equal(result.battery_state_report.soc, 82);
-    assert.equal(result._timestamps.battery_state_report.soc, sourceTime);
+    assert.equal(result._timestamps.battery_state_report.soc, sourceTimestamp);
     assert.equal(result.plug_state, "connected");
-    assert.equal(result._timestamps.plug_state, "2026-11-18T01:00:00.000Z");
+    assert.equal(result._timestamps.plug_state, Date.parse("2026-11-18T01:00:00.000Z"));
   });
 
   for (const invalid of [undefined, null, "", "invalid-date", 1794955572000]) {
@@ -38,7 +39,7 @@ describe("EU Data Act source timestamps", () => {
       const point = { ...reading("state_of_charge", "82"), timestampUtc: invalid };
       const result = normalizeDataset({ Data: [point] });
       assert.equal(result.state_of_charge, 82);
-      assert.equal(result._timestamps.state_of_charge, "");
+      assert.equal(result._timestamps.state_of_charge, 0);
     });
   }
 
@@ -50,9 +51,9 @@ describe("EU Data Act source timestamps", () => {
       reading("mileage.value", "19990", "2026-11-18T10:00:00Z"),
     ] });
     assert.equal(result.state_of_charge, 82);
-    assert.equal(result._timestamps.state_of_charge, sourceTime);
+    assert.equal(result._timestamps.state_of_charge, sourceTimestamp);
     assert.equal(result.mileage.value, 20000);
-    assert.equal(result._timestamps.mileage.value, sourceTime);
+    assert.equal(result._timestamps.mileage.value, sourceTimestamp);
   });
 
   it("keeps usable value/timestamp pairs when duplicate sentinels occur", () => {
@@ -63,7 +64,7 @@ describe("EU Data Act source timestamps", () => {
       reading("remaining_charging_time", "-1"),
     ] });
     assert.equal(result.state_of_charge, 82);
-    assert.equal(result._timestamps.state_of_charge, sourceTime);
+    assert.equal(result._timestamps.state_of_charge, sourceTimestamp);
     assert.equal(result.remaining_charging_time, undefined);
     assert.equal(result._timestamps.remaining_charging_time, undefined);
   });
@@ -75,7 +76,7 @@ describe("EU Data Act source timestamps", () => {
       reading("cruising_range_secondary_engine", "200"),
     ] });
     assert.equal(result.cruising_range_combined, 300);
-    assert.equal(result._timestamps.cruising_range_combined, "");
+    assert.equal(result._timestamps.cruising_range_combined, 0);
   });
 
   it("mirrors value paths when a field is both a primitive and a parent", () => {
@@ -85,7 +86,7 @@ describe("EU Data Act source timestamps", () => {
     ]) {
       const result = normalizeDataset({ Data });
       assert.deepEqual(result.mileage, { _value: 20000, value: 20000 });
-      assert.deepEqual(result._timestamps.mileage, { _value: sourceTime, value: sourceTime });
+      assert.deepEqual(result._timestamps.mileage, { _value: sourceTimestamp, value: sourceTimestamp });
     }
   });
 
@@ -107,18 +108,18 @@ describe("EU Data Act source timestamps", () => {
     };
 
     await publish(reading("charging_state", "charging"));
-    assert.deepEqual(states[`${base}._timestamps.charging_state`], { value: sourceTime, ack: true });
-    assert.equal(objects[`${base}._timestamps.charging_state`].common.type, "string");
+    assert.deepEqual(states[`${base}._timestamps.charging_state`], { value: sourceTimestamp, ack: true });
+    assert.equal(objects[`${base}._timestamps.charging_state`].common.type, "number");
     assert.ok(!objects[`${base}._timestamps.charging_state`].common.write);
     assert.equal(objects[`${base}._timestamps.charging_state`].common.states, undefined);
     assert.deepEqual(valueStates.charging_state, { charging: "Charging" });
 
     await publish({ ...reading("charging_state", "charging"), timestampUtc: null });
-    assert.deepEqual(states[`${base}._timestamps.charging_state`], { value: "", ack: true });
+    assert.deepEqual(states[`${base}._timestamps.charging_state`], { value: 0, ack: true });
     assert.deepEqual(states[`${base}.charging_state`], { value: "charging", ack: true });
 
     await publish(reading("charging_state", "65535"));
-    assert.deepEqual(states[`${base}._timestamps.charging_state`], { value: "", ack: true });
+    assert.deepEqual(states[`${base}._timestamps.charging_state`], { value: 0, ack: true });
     assert.deepEqual(states[`${base}.charging_state`], { value: "charging", ack: true });
   });
 });

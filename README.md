@@ -99,13 +99,15 @@ Each imported reading has a matching source timestamp under
 `statuseudata._timestamps.state_of_charge`, and `statuseudata.battery_state_report.soc`
 with `statuseudata._timestamps.battery_state_report.soc`.
 
-These read-only strings contain the selected reading's `Data[].timestampUtc`,
-normalized to UTC ISO 8601. Subtracting that timestamp from the current time
-gives the age of the source reading. Compare it with `_dataset_created_on` to
-measure the delay between the source reading and package creation. The ioBroker
-state's `ts` records when the adapter published the value.
+These read-only number states contain the selected reading's `Data[].timestampUtc`
+as a Unix timestamp in milliseconds. For example, `2026-11-17T22:46:12.000Z`
+becomes `1794955572000`. For a valid timestamp greater than zero,
+`Date.now() - timestamp` gives the source reading's age in milliseconds.
+`Date.parse(_dataset_created_on) - timestamp` gives the delay between the source
+reading and package creation. The ioBroker state's `ts` records when the adapter
+published the value.
 
-An empty timestamp string means that the imported reading has a missing or
+A timestamp of `0` means that the imported reading has a missing or
 invalid source timestamp, or that its value was reconstructed from other fields.
 Repeated imports of the same source reading retain its original source timestamp.
 For duplicate fields, the timestamp belongs to the entry chosen by the existing
@@ -180,9 +182,9 @@ You can set climatisaton temperature in
 ```
 ### **WORK IN PROGRESS**
 
-### 0.10.3-alpha.0 (2026-11-21)
+### 0.10.3-alpha.1 (2026-11-21)
 
-- Test version: expose each imported EU Data Act reading's original measurement timestamp under `<vin>.statuseudata._timestamps.*` to check source-data delays.
+- Test version: expose each imported EU Data Act reading's original measurement timestamp as Unix milliseconds under `<vin>.statuseudata._timestamps.*` to check source-data delays.
 
 ### 0.10.2 (2026-11-16)
 - EU Data Act: follow VW's portal move from eu-data-act.drivesomethinggreater.com to eu-data-act.vwgroup-datahub.com (old host now 301-redirects); fixes the "Login did not complete" failure that broke every login after the host change. Both hosts are accepted during the transition
